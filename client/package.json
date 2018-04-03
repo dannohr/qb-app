@@ -1,0 +1,28 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "aws-amplify": "^0.2.11",
+    "axios": "^0.18.0",
+    "node-quickbooks": "^2.0.24",
+    "query-string": "^6.0.0",
+    "react": "^16.2.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.2.0",
+    "react-new-window": "0.0.6",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.1",
+    "request": "^2.85.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "aws s3 sync build/ s3://qb-app-client --delete",
+    "postdeploy": "aws cloudfront create-invalidation --distribution-id E30DD3WB3BNIA8 --paths '/*' && aws cloudfront create-invalidation --distribution-id E25TQLFRG17V0N --paths '/*'",
+    "eject": "react-scripts eject"
+  }
+}
