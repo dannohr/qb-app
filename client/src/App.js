@@ -12,9 +12,29 @@ class App extends Component {
     super(props);
 
     this.state = {
+      // AWS Authentification:
       isAuthenticated: false,
       isAuthenticating: true
     };
+
+    //QB Authentification:
+    // realmId: '',
+    // accessToken: '',
+    // payload: '',
+    // scope: '',
+    // oauth2_token_json: {
+    // x_refresh_token_expires_in: 0,
+    // refresh_token: "",
+    // access_token: "",
+    // token_type: "",
+    // expires_in: 0
+    // },
+    // authUri: '',
+    // redirectUri: '',
+    // token: '',
+    // companyInfo: ''
+
+
   }
 
   async componentDidMount() {
@@ -30,22 +50,37 @@ class App extends Component {
     }
 
     this.setState({ isAuthenticating: false });
+
   }
 
   userHasAuthenticated = authenticated => {
     this.setState({ isAuthenticated: authenticated });
   }
 
+  setQBrealmId = realmId => {
+    this.setState({ realmId: realmId });
+  }
+
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated
-    };
+      userHasAuthenticated: this.userHasAuthenticated,
+
+      realmId: this.state.realmId,
+      setQBrealmId: this.setQBrealmId,
+      accessToken: this.state.accessToken,
+      payload: this.state.payload,
+      scope: this.state.scope,
+      oauth2_token_json: this.state.oauth2_token_json,
+      authUri: this.state.authUri,
+      redirectUri: this.state.redirectUri,
+      token: this.state.token,
+    }
 
     return (
       !this.state.isAuthenticating &&
       <div className="App container">
-        <NavBar authStatus={childProps} userHasAuthenticated={this.userHasAuthenticated} />
+        <NavBar childProps={childProps} />
         <Routes childProps={childProps} />
       </div>
     );

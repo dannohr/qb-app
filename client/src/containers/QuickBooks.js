@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import queryString from 'query-string';
 import config from "../config";
 import { API } from "aws-amplify";
-import { Checkbox, Radio, FormGroup, ControlLabel, FormControl, Button, HelpBlock } from "react-bootstrap";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as qbActions from '../actions/qbActions';
 import "./QuickBooks.css";
 
-export default class QuickBooks extends Component {
+class QuickBooks extends Component {
     constructor(props) {
         super(props);
 
@@ -21,25 +23,25 @@ export default class QuickBooks extends Component {
                 token_type: "",
                 expires_in: 0
             },
-            authUri: '',
+            // authUri: '',
             redirectUri: '',
             token: '',
-            companyInfo: '',
-            testCall: ''
+            companyInfo: ''
 
         };
     }
 
-    getAuthUri = async () => {
-        try {
-            // built Uri and add to state
-            const authUri = await API.get("notes", "/qburi")
-            this.setState({ authUri });
-            return authUri
-        } catch (err) {
-            console.log(err)
-        }
-    }
+    // getAuthUri = async () => {
+    //     // this.props.userHasAuthenticated(false);
+    //     try {
+    //         // built Uri and add to state
+    //         const authUri = await API.get("notes", "/qburi")
+    //         this.setState({ authUri });
+    //         return authUri
+    //     } catch (err) {
+    //         console.log(err)
+    //     }
+    // }
 
     getCallback = async () => {
 
@@ -80,8 +82,6 @@ export default class QuickBooks extends Component {
         console.log('opening window')
 
         var pollOAuth = window.setInterval(() => {
-            // count += 1;
-            // console.log(count)
             try {
 
                 if (win.document.URL.indexOf("code") !== -1) {
@@ -100,15 +100,14 @@ export default class QuickBooks extends Component {
 
 
     handleLogin = async () => {
-        await this.getAuthUri()
-            .then((res) => {
-                this.getRedirectUri(res)
-            });
+        console.log(this.props)
+        this.getRedirectUri(this.props.qbAuth.authUri)
     }
 
-    handleRefresh() {
-        console.log('refresh token')
-        console.log(this.state)
+    handleRefresh = () => {
+        this.getRedirectUri(this.props.qbActions.getUri())
+        // this.props.qbActions.getUri()
+        console.log(this.props)
     }
 
     handleGetCompanyInfo = async () => {
@@ -129,24 +128,24 @@ export default class QuickBooks extends Component {
         }
     }
 
+    componentWillMount() { // HERE WE ARE TRIGGERING THE ACTION
+        this.props.qbActions.getUri();
+    }
 
+    componentDidMount() {
+
+        // console.log(this.state)
+        // console.log(this.props)
+
+    }
 
     render() {
 
-        function FieldGroup({ id, label, help, ...props }) {
-            return (
-                <FormGroup controlId={id}>
-                    <ControlLabel>{label}</ControlLabel>
-                    <FormControl {...props} />
-                    {help && <HelpBlock>{help}</HelpBlock>}
-                </FormGroup>
-            );
-        }
         return (
             <div className="container">
 
                 <div className="well text-center">
-                    <h1>Test Quickbooks Connection</h1>
+                    <h1>Establish Connection</h1>
                 </div>
 
                 <h2>OAuth2.0</h2><h4>(Please refer to the <a target="_balnk" href="https://developer.intuit.com/docs/00_quickbooks_online/2_build/10_authentication_and_authorization/10_oauth_2.0">OAuth2.0 Documentation</a> )</h4>
@@ -160,90 +159,31 @@ export default class QuickBooks extends Component {
                 <hr />
 
                 <pre> {JSON.stringify(this.state.oauth2_token_json, null, 2)} </pre>
-                <pre> {JSON.stringify(this.state.authUri, null, 2)} </pre>
+                <pre> {JSON.stringify(this.props.qbAuth.authUri, null, 2)} </pre>
                 <pre> {JSON.stringify(this.state.redirectUri, null, 2)} </pre>
                 <pre> {JSON.stringify(this.state.companyInfo, null, 2)} </pre>
-
-                <h2>Make an API call</h2>
-                <h4>(Please refer to our<a target="_balnk" href="https://developer.intuit.com/v2/apiexplorer?apiname=V3QBO#?id=Account"> API Explorer</a> )
-                </h4>
-                <p>If there is no access token or the access token is invalid, click <b>Connect to QuickBooks</b> button above.</p>
-                {/* <pre id="apiCall">{{ api_call }}</pre> */}
-
-
-                <form>
-                    <FieldGroup
-                        id="formControlsText"
-                        type="text"
-                        label="Text"
-                        placeholder="Enter text"
-                    />
-                    <FieldGroup
-                        id="formControlsEmail"
-                        type="email"
-                        label="Email address"
-                        placeholder="Enter email"
-                    />
-                    <FieldGroup id="formControlsPassword" label="Password" type="password" />
-                    <FieldGroup
-                        id="formControlsFile"
-                        type="file"
-                        label="File"
-                        help="Example block-level help text here."
-                    />
-
-                    <Checkbox checked readOnly>
-                        Checkbox
-    </Checkbox>
-                    <Radio checked readOnly>
-                        Radio
-    </Radio>
-
-                    <FormGroup>
-                        <Checkbox inline>1</Checkbox> <Checkbox inline>2</Checkbox>{' '}
-                        <Checkbox inline>3</Checkbox>
-                    </FormGroup>
-                    <FormGroup>
-                        <Radio name="radioGroup" inline>
-                            1
-      </Radio>{' '}
-                        <Radio name="radioGroup" inline>
-                            2
-      </Radio>{' '}
-                        <Radio name="radioGroup" inline>
-                            3
-      </Radio>
-                    </FormGroup>
-
-                    <FormGroup controlId="formControlsSelect">
-                        <ControlLabel>Select</ControlLabel>
-                        <FormControl componentClass="select" placeholder="select">
-                            <option value="select">select</option>
-                            <option value="other">...</option>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup controlId="formControlsSelectMultiple">
-                        <ControlLabel>Multiple select</ControlLabel>
-                        <FormControl componentClass="select" multiple>
-                            <option value="select">select (multiple)</option>
-                            <option value="other">...</option>
-                        </FormControl>
-                    </FormGroup>
-
-                    <FormGroup controlId="formControlsTextarea">
-                        <ControlLabel>Textarea</ControlLabel>
-                        <FormControl componentClass="textarea" placeholder="textarea" />
-                    </FormGroup>
-
-                    <FormGroup>
-                        <ControlLabel>Static text</ControlLabel>
-                        <FormControl.Static>email@example.com</FormControl.Static>
-                    </FormGroup>
-
-                    <Button type="submit">Submit</Button>
-                </form>
 
             </div>
         );
     }
 }
+
+
+
+function mapStateToProps(state) {
+    return {
+        // This is what it's called in this.props
+        qbAuth: state.qbReducer.qbAuth
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        qbActions: bindActionCreators(qbActions, dispatch)
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(QuickBooks);

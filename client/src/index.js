@@ -1,11 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 import Amplify from "aws-amplify";
 import "./index.css";
 import config from "./config";
+import configureStore from './store/configureStore';
+
+const store = configureStore();
 
 // https://serverless-stack.com/chapters/configure-aws-amplify.html
 Amplify.configure({
@@ -33,9 +37,12 @@ Amplify.configure({
 });
 
 ReactDOM.render(
-    <Router>
-        <App />
-    </Router>,
+    <Provider store={store}>
+        <Router>
+            <App />
+        </Router>
+    </Provider>,
     document.getElementById("root")
 );
+
 registerServiceWorker();

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 // import { API } from "aws-amplify";
 import { PageHeader } from "react-bootstrap";
-import QuickBooks from "../containers/QuickBooks";
+// import QuickBooks from "../containers/QuickBooks";
 import "./Home.css";
 
 
@@ -52,7 +52,7 @@ export default class Home extends Component {
         return (
             <div className="notes">
                 <PageHeader>Home Page</PageHeader>
-                <QuickBooks />
+                {/* <QuickBooks /> */}
 
             </div>
         );

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import queryString from 'query-string';
-import config from "../config";
-import { API } from "aws-amplify";
+// import queryString from 'query-string';
+// import config from "../config";
+// import { API } from "aws-amplify";
 import { PageHeader } from "react-bootstrap";
 import "./QuickBooks.css";
 

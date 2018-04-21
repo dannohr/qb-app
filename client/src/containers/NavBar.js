@@ -9,7 +9,8 @@ export default class NavBar extends Component {
 
     handleLogout = async event => {
         await Auth.signOut();
-        this.props.userHasAuthenticated(false);
+        // this.props.userHasAuthenticated(false);
+        this.props.childProps.userHasAuthenticated(false);
     }
 
     render() {
@@ -18,13 +19,13 @@ export default class NavBar extends Component {
             <Navbar fluid collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <Link to="/">Quickbooks Rental App</Link>
+                        <Link to="/">Test App</Link>
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
                     <Nav pullRight>
-                        {this.props.authStatus.isAuthenticated
+                        {this.props.childProps.isAuthenticated
                             ? <Fragment>
                                 <NavDropdown eventKey={1} title="Tenants" id="basic-nav-dropdown">
                                     <LinkContainer to="/tenant">
@@ -50,8 +51,8 @@ export default class NavBar extends Component {
                                     <LinkContainer to="/usernotes">
                                         <NavItem>User Notes</NavItem>
                                     </LinkContainer>
-                                    <LinkContainer to="/companyinfo">
-                                        <NavItem>Company Info</NavItem>
+                                    <LinkContainer to="/quickbooks">
+                                        <NavItem>Quickbooks Login</NavItem>
                                     </LinkContainer>
                                     <MenuItem divider />
                                     <MenuItem eventKey={4.3}>Separated link</MenuItem>

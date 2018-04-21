@@ -23,6 +23,7 @@ export default ({ childProps }) =>
         <AuthenticatedRoute path="/notes/:id" exact component={Notes} props={childProps} />
         <AuthenticatedRoute path="/quickbooks" exact component={QuickBooks} props={childProps} />
         <AuthenticatedRoute path="/tenant" exact component={TenantList} props={childProps} />
+        {/* <AuthenticatedRoute path="/companyinfo" exact component={Com} props={childProps} /> */}
         { /* Finally, catch all unmatched routes */}
         <Route component={NotFound} />
     </Switch>;
